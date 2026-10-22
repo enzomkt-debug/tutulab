@@ -285,7 +285,7 @@ const LOJA = {
    fotos: caminhos dentro da pasta img/ (ex.: "img/pecas/dragao-1.jpg").
           Sem foto, aparece uma placa colorida com a inicial.
    preco: número (ex.: 49.90) ou null para aparecer "Sob consulta".
-   Opcionais: resumo, tamanho, gramas, horas, camada, idade, video (img/videos/x.mp4 + x.jpg de capa), exemplo: true.
+   Opcionais: credito (autor e licença do modelo 3D), resumo, tamanho, gramas, horas, camada, idade, video (img/videos/x.mp4 + x.jpg de capa), exemplo: true.
    ===================================================================== */
 const OUTRA = "Outra cor (escreva na observação)";
 const PECAS = [
@@ -329,7 +329,21 @@ const PECAS = [
     descricao: "Cofrinho em forma de cabeça de bonequinho sorridente. A moeda entra por cima e a tampa de baixo abre para tirar o dinheiro.",
     cores: ["Amarelo (como na foto)", OUTRA], cor: "#F2B705",
     video: "img/videos/cofre-cabecao.mp4",
-    fotos: ["img/pecas/cofre-cabecao-capa.jpg", "img/pecas/cofre-cabecao-1.jpg", "img/pecas/cofre-cabecao-2.jpg", "img/pecas/cofre-cabecao-3.jpg", "img/pecas/cofre-cabecao-4.jpg", "img/pecas/cofre-cabecao-5.jpg"] }
+    fotos: ["img/pecas/cofre-cabecao-capa.jpg", "img/pecas/cofre-cabecao-1.jpg", "img/pecas/cofre-cabecao-2.jpg", "img/pecas/cofre-cabecao-3.jpg", "img/pecas/cofre-cabecao-4.jpg", "img/pecas/cofre-cabecao-5.jpg"] },
+  { id: "quebra-cabeca-triceratops", nome: "Quebra-Cabeça Triceratops", categoria: "Quebra-cabeças", preco: 35.90,
+    resumo: "Esqueleto de dinossauro para montar",
+    descricao: "Esqueleto de Triceratops para montar e desmontar. As peças encaixam por pressão, sem cola, e depois de montado ele fica em pé sozinho. Ajuda na coordenação e na noção de espaço.",
+    gramas: 67, idade: "Contém peças pequenas. Não indicado para menores de 3 anos.",
+    credito: "Hef413 (MakerWorld), licença CC BY-SA 4.0",
+    cores: ["Cor sortida", OUTRA], cor: "#E8D9B5",
+    fotos: ["img/pecas/quebra-cabeca-triceratops-1.jpg", "img/pecas/quebra-cabeca-triceratops-2.jpg", "img/pecas/quebra-cabeca-triceratops-3.jpg", "img/pecas/quebra-cabeca-triceratops-4.jpg", "img/pecas/quebra-cabeca-triceratops-5.jpg", "img/pecas/quebra-cabeca-triceratops-6.jpg"] },
+  { id: "cortador-dino", nome: "Kit Cortadores Dinossauro", categoria: "Massinha", preco: 34.90,
+    resumo: "Corta e carimba biscoito e massinha",
+    descricao: "Kit com vários dinossauros que cortam a massa e já carimbam o desenho da pele. Serve para biscoito, massinha, argila e areia mágica. A borda corta bem e solta a massa limpa.",
+    gramas: 65, idade: "Uso com supervisão de um adulto.",
+    credito: "Merilno3D (MakerWorld), licença CC BY-ND 4.0",
+    cores: ["Cor sortida", OUTRA], cor: "#76D7B0",
+    fotos: ["img/pecas/cortador-dino-1.jpg", "img/pecas/cortador-dino-2.jpg", "img/pecas/cortador-dino-3.jpg", "img/pecas/cortador-dino-4.jpg", "img/pecas/cortador-dino-5.jpg", "img/pecas/cortador-dino-6.jpg"] }
 ];
 
 /* ===================================================================== */
@@ -410,6 +424,7 @@ function openProduct(id) {
             <dt>Material</dt><dd>PLA impresso em 3D</dd>
             ${p.tamanho ? `<dt>Tamanho</dt><dd>${esc(p.tamanho)}</dd>` : ""}
             ${p.gramas ? `<dt>Peso</dt><dd>${p.gramas} g</dd>` : ""}
+            ${p.credito ? `<dt>Modelo 3D</dt><dd>${esc(p.credito)}</dd>` : ""}
             ${p.horas ? `<dt>Impressão</dt><dd>${horas(p.horas)}${p.camada ? ` · camada de ${esc(p.camada)}` : ""}</dd>` : ""}
           </dl>
           ${p.idade ? `<div class="age">${esc(p.idade)}</div>` : ""}
