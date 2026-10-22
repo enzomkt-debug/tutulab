@@ -131,7 +131,7 @@ header.top .wrap { display: flex; align-items: center; gap: 12px; padding-block:
     var(--c, var(--azul)); }
 .ph span { font: 700 clamp(3.5rem, 9vw, 5.5rem)/1 var(--f-display); color: rgba(255,255,255,.92); text-shadow: 0 4px 0 rgba(0,0,0,.12); }
 .ph img { width: 100%; height: 100%; object-fit: cover; }
-.ph video { width: 100%; height: 100%; object-fit: contain; background: #0E1527; }
+.ph video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #0E1527; }
 .tag-vid { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px; background: rgba(14,21,39,.82); color: #FFF8E8; font-size: .75rem; font-weight: 800; padding: 5px 9px 5px 8px; border-radius: 999px; }
 .tag-vid::before, .pd .thumbs .play::before { content: ""; border-style: solid; border-width: 5px 0 5px 8px; border-color: transparent transparent transparent var(--amarelo); }
 .pd .thumbs button { position: relative; }
@@ -315,11 +315,13 @@ const PECAS = [
     descricao: "Dragão preto de olhos amarelos, com asas grandes e corpo articulado: dá para mexer o pescoço, as pernas e a cauda. Já vem montado.",
     idade: "Contém partes pequenas e pontas. Não indicado para menores de 3 anos.",
     cores: ["Preto (como na foto)", OUTRA], cor: "#24262B",
+    video: "img/videos/dragao-noturno.mp4",
     fotos: ["img/pecas/dragao-noturno-capa.jpg", "img/pecas/dragao-noturno-1.jpg", "img/pecas/dragao-noturno-2.jpg", "img/pecas/dragao-noturno-3.jpg", "img/pecas/dragao-noturno-4.jpg"] },
   { id: "cofre-cabecao", nome: "Cofrinho Cabeção", categoria: "Cofrinhos", preco: 189.90,
     resumo: "Cofre de cabeça sorridente",
     descricao: "Cofrinho em forma de cabeça de bonequinho sorridente. A moeda entra por cima e a tampa de baixo abre para tirar o dinheiro.",
     cores: ["Amarelo (como na foto)", OUTRA], cor: "#F2B705",
+    video: "img/videos/cofre-cabecao.mp4",
     fotos: ["img/pecas/cofre-cabecao-capa.jpg", "img/pecas/cofre-cabecao-1.jpg", "img/pecas/cofre-cabecao-2.jpg", "img/pecas/cofre-cabecao-3.jpg", "img/pecas/cofre-cabecao-4.jpg", "img/pecas/cofre-cabecao-5.jpg"] }
 ];
 
@@ -334,7 +336,7 @@ const consulta = () => cart.some(l => !byId(l.id).preco);
 
 function pic(p, i = 0) {
   const f = p.fotos[i];
-  if (i === -1) return `<div class="ph"><video src="${esc(p.video)}" poster="${esc(p.video.replace(/\.mp4$/, ".jpg"))}" autoplay muted loop playsinline controls aria-label="Vídeo: ${esc(p.nome)} acesa"></video></div>`;
+  if (i === -1) return `<div class="ph"><video src="${esc(p.video)}" poster="${esc(p.video.replace(/\.mp4$/, ".jpg"))}" autoplay muted loop playsinline controls aria-label="Vídeo: ${esc(p.nome)}"></video></div>`;
   return `<div class="ph" style="--c:${esc(p.cor || "#2855D9")}">${f ? `<img src="${esc(f)}" alt="${esc(p.nome)}" loading="lazy">` : `<span aria-hidden="true">${esc(p.nome[0])}</span>`}</div>`;
 }
 
@@ -365,7 +367,7 @@ function renderGrid() {
   const list = PECAS.filter(p => filtro === "Todas" || p.categoria === filtro);
   $("#grid").innerHTML = list.map(p => `
     <article class="card">
-      <button class="pic" type="button" data-open="${p.id}" aria-label="Ver ${esc(p.nome)}">${pic(p)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}${p.video ? '<span class="tag-vid">vídeo acesa</span>' : ""}</button>
+      <button class="pic" type="button" data-open="${p.id}" aria-label="Ver ${esc(p.nome)}">${pic(p)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}${p.video ? `<span class="tag-vid">${p.categoria === "Luminárias" ? "vídeo acesa" : "vídeo"}</span>` : ""}</button>
       <div class="body">
         <h3>${esc(p.nome)}</h3>
         <div class="spec">${esc(p.resumo || p.categoria)}</div>
@@ -390,7 +392,7 @@ function openProduct(id) {
         <div>
           <div class="gal">${pic(p, foto)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}</div>
           ${p.fotos.length > 1 || p.video ? `<div class="thumbs">${[0, ...(p.video ? [-1] : []), ...p.fotos.map((_, i) => i).slice(1)].map(i => i === -1
-            ? `<button type="button" data-foto="-1" aria-current="${foto === -1}" aria-label="Vídeo da luminária acesa"><img src="${esc(p.video.replace(/\.mp4$/, ".jpg"))}" alt=""><span class="play"></span></button>`
+            ? `<button type="button" data-foto="-1" aria-current="${foto === -1}" aria-label="Vídeo da peça"><img src="${esc(p.video.replace(/\.mp4$/, ".jpg"))}" alt=""><span class="play"></span></button>`
             : `<button type="button" data-foto="${i}" aria-current="${i === foto}" aria-label="Foto ${i + 1}"><img src="${esc(p.fotos[i])}" alt=""></button>`).join("")}</div>` : ""}
         </div>
         <div class="info">
