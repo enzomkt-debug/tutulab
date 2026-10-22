@@ -1,0 +1,480 @@
+<title>Tutu Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Tutu Lab: brinquedos e peças impressos em 3D. Brinquedos e ideias criativas.">
+<link rel="icon" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&display=swap">
+<style>
+/* Layout: vitrine de laboratório — faixa de topo com a logo, grade de peças, gaveta de carrinho à direita.
+   Assinatura visual: "linhas de camada" da impressão 3D nos fundos das peças e no título. */
+:root {
+  --azul: #2855D9;        /* azul aventura */
+  --marinho: #18284B;     /* texto e "LAB" */
+  --amarelo: #FFC845;     /* estrelas, destaques */
+  --laranja: #FF7043;     /* botões */
+  --menta: #76D7B0;       /* apoio */
+  --ceu: #6AADE0;
+  --creme: #FFF8E8;
+
+  --bg: var(--creme);
+  --surface: #FFFFFF;
+  --fg: var(--marinho);
+  --muted: #5B6685;
+  --line: #EADFC6;
+  --accent: var(--azul);
+  --cta: var(--laranja);
+  --cta-fg: #2A1206;
+  --chip: #FFF0C9;
+  --shadow: 0 1px 0 rgba(24,40,75,.06), 0 8px 24px -12px rgba(24,40,75,.25);
+
+  --f-display: "Fredoka", "Baloo 2", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --f-body: "Nunito Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r: 18px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111C36; --surface: #18284B; --fg: #FFF8E8; --muted: #AEB8D3; --line: #2A3B63;
+    --accent: #8FA9FF; --cta: #FF7043; --cta-fg: #2A1206; --chip: #233561;
+    --shadow: 0 1px 0 rgba(0,0,0,.2), 0 10px 28px -14px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111C36; --surface: #18284B; --fg: #FFF8E8; --muted: #AEB8D3; --line: #2A3B63;
+  --accent: #8FA9FF; --cta: #FF7043; --cta-fg: #2A1206; --chip: #233561;
+  --shadow: 0 1px 0 rgba(0,0,0,.2), 0 10px 28px -14px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 400 16px/1.55 var(--f-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.1; text-wrap: balance; margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; border-radius: 8px; }
+.price { font-variant-numeric: tabular-nums; font-weight: 800; }
+
+/* Topo */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); }
+.brand img { width: 44px; height: 44px; }
+.brand b { font: 700 1.45rem/1 var(--f-display); letter-spacing: .01em; }
+.brand b span { color: var(--accent); }
+.top nav { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.top nav a { color: var(--fg); text-decoration: none; font-weight: 600; padding: 8px 10px; border-radius: 10px; }
+.top nav a:hover { background: var(--chip); }
+.cart-btn { display: inline-flex; align-items: center; gap: 8px; border: 0; background: var(--marinho); color: var(--creme); padding: 10px 14px; border-radius: 999px; font-weight: 800; }
+:root[data-theme="dark"] .cart-btn { background: var(--creme); color: var(--marinho); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cart-btn { background: var(--creme); color: var(--marinho); } }
+.cart-btn .n { background: var(--amarelo); color: var(--marinho); border-radius: 999px; min-width: 22px; height: 22px; display: inline-grid; place-items: center; font-size: .8rem; padding: 0 6px; }
+@media (max-width: 640px) { .top nav a { display: none; } }
+
+/* Hero */
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; align-items: center; padding-block: 40px 28px; }
+.hero h1 { font-size: clamp(2.3rem, 5.6vw, 4.2rem); }
+.hero h1 .layers {
+  color: var(--accent);
+  background: repeating-linear-gradient(180deg, transparent 0 5px, rgba(255,200,69,.55) 5px 6px);
+  -webkit-background-clip: text; background-clip: text;
+}
+.hero p.lead { font-size: 1.15rem; color: var(--muted); max-width: 46ch; margin: 16px 0 24px; }
+.hero .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 13px 22px; font-weight: 800; text-decoration: none; }
+.btn.cta { background: var(--cta); color: var(--cta-fg); }
+.btn.cta:hover { filter: brightness(1.05); }
+.btn.ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 2px var(--line); }
+.hero figure { margin: 0; justify-self: center; position: relative; }
+.hero figure img { width: min(380px, 100%); display: block; filter: drop-shadow(0 18px 30px rgba(24,40,75,.22)); }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 26px; color: var(--muted); font-size: .92rem; }
+.facts span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--menta); margin-right: 8px; vertical-align: middle; }
+@media (max-width: 760px) {
+  .hero .wrap { grid-template-columns: 1fr; padding-block: 24px 12px; gap: 16px; }
+  .hero figure { order: -1; }
+  .hero figure img { width: 200px; }
+}
+
+/* Como funciona */
+.steps { padding-block: 8px 36px; }
+.steps ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; counter-reset: s; }
+.steps li { counter-increment: s; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; min-width: 0; }
+.steps li::before { content: counter(s); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--amarelo); color: var(--marinho); font: 700 1rem var(--f-display); margin-bottom: 8px; }
+.steps b { display: block; font-family: var(--f-display); font-size: 1.1rem; }
+.steps small { color: var(--muted); font-size: .9rem; }
+@media (max-width: 860px) { .steps ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Vitrine */
+.shop { padding-block: 8px 48px; }
+.shop-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.shop-head h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 0; background: var(--chip); color: var(--fg); padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: .92rem; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+.notice { background: var(--chip); border: 1px dashed var(--amarelo); border-radius: 12px; padding: 10px 14px; font-size: .92rem; margin-bottom: 18px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+.card { background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.card .pic { all: unset; cursor: pointer; display: block; aspect-ratio: 1; max-width: 100%; position: relative; }
+.card .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.card h3 { font-size: 1.15rem; font-weight: 600; }
+.card .spec { color: var(--muted); font-size: .85rem; }
+.card .row { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 8px; }
+.card .price { font-size: 1.25rem; }
+.add { border: 0; background: var(--cta); color: var(--cta-fg); border-radius: 999px; padding: 9px 14px; font-weight: 800; font-size: .9rem; }
+.tag-ex { position: absolute; top: 10px; left: 10px; background: var(--marinho); color: var(--creme); font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; }
+
+/* Foto ou "placa" com linhas de camada quando ainda não há foto */
+.ph { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden;
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,.0) 0 7px, rgba(255,255,255,.22) 7px 9px),
+    var(--c, var(--azul)); }
+.ph span { font: 700 clamp(3.5rem, 9vw, 5.5rem)/1 var(--f-display); color: rgba(255,255,255,.92); text-shadow: 0 4px 0 rgba(0,0,0,.12); }
+.ph img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Diálogo de produto e gaveta */
+dialog { border: 0; padding: 0; background: var(--surface); color: var(--fg); border-radius: 22px; max-width: min(860px, calc(100vw - 24px)); width: 100%; box-shadow: 0 30px 80px -20px rgba(0,0,0,.5); }
+dialog::backdrop { background: rgba(17,28,54,.55); }
+.pd { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.pd .gal { position: relative; aspect-ratio: 1; max-width: 100%; }
+.pd .thumbs { display: flex; gap: 6px; padding: 8px; overflow-x: auto; }
+.pd .thumbs button { all: unset; cursor: pointer; width: 56px; height: 56px; border-radius: 10px; overflow: hidden; flex: none; outline: 2px solid transparent; }
+.pd .thumbs button[aria-current="true"] { outline-color: var(--accent); }
+.pd .thumbs img { width: 100%; height: 100%; object-fit: cover; }
+.pd .info { padding: 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.pd h3 { font-size: 1.7rem; }
+.pd .price { font-size: 1.6rem; }
+.pd p { margin: 0; }
+.specs { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: .9rem; margin: 0; }
+.specs dt { color: var(--muted); }
+.specs dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.age { font-size: .85rem; background: var(--chip); border-radius: 10px; padding: 8px 10px; }
+label.f { display: flex; flex-direction: column; gap: 4px; font-weight: 700; font-size: .9rem; }
+select, input, textarea { font: inherit; color: var(--fg); background: var(--bg); border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; width: 100%; }
+.qty { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 999px; }
+.qty button { border: 0; background: none; width: 36px; height: 36px; font-weight: 800; font-size: 1.1rem; }
+.qty output { min-width: 26px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
+.close { position: absolute; top: 10px; right: 10px; z-index: 2; border: 0; width: 38px; height: 38px; border-radius: 50%; background: var(--surface); color: var(--fg); font-size: 1.3rem; box-shadow: var(--shadow); }
+@media (max-width: 700px) { .pd { grid-template-columns: 1fr; } .pd .info { padding: 18px; } }
+
+.drawer { margin: 0 0 0 auto; height: 100%; max-height: 100%; max-width: min(440px, 100vw); border-radius: 22px 0 0 22px; }
+.drawer .in { display: flex; flex-direction: column; height: 100%; padding: calc(18px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) 18px; gap: 14px; }
+.drawer h2 { font-size: 1.6rem; }
+.lines { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 80px; }
+.line { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.line .mini { position: relative; width: 56px; height: 56px; border-radius: 12px; overflow: hidden; }
+.line .mini .ph span { font-size: 1.6rem; }
+.line small { color: var(--muted); display: block; }
+.line .rm { border: 0; background: none; color: var(--muted); font-size: .8rem; text-decoration: underline; padding: 0; }
+.total { display: flex; justify-content: space-between; font-size: 1.2rem; border-top: 1px solid var(--line); padding-top: 12px; }
+.total small { display: block; font-size: .8rem; color: var(--muted); font-weight: 400; }
+.checkout { display: grid; gap: 10px; }
+.checkout .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.empty { color: var(--muted); text-align: center; padding: 30px 10px; }
+.msgbox { white-space: pre-wrap; font-size: .82rem; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px; max-height: 180px; overflow: auto; }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 28px 36px; display: flex; flex-wrap: wrap; gap: 18px 36px; justify-content: space-between; color: var(--muted); font-size: .92rem; }
+footer b { color: var(--fg); font-family: var(--f-display); font-size: 1.1rem; display: block; margin-bottom: 4px; }
+footer a { color: var(--accent); }
+
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--marinho); color: var(--creme); padding: 10px 18px; border-radius: 999px; font-weight: 700; z-index: 20; }
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .15s ease; }
+  .card:hover { transform: translateY(-3px); }
+  .hero figure img { animation: bob 5s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-8px) rotate(-1.5deg); } }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="Tutu Lab, início">
+      <img src="img/logo-160.png" alt="">
+      <b><span>Tutu</span> Lab</b>
+    </a>
+    <nav>
+      <a href="#pecas">Peças</a>
+      <a href="#como">Como comprar</a>
+      <button class="cart-btn" id="openCart" type="button" aria-label="Abrir carrinho">Carrinho <span class="n" id="cartCount">0</span></button>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Brinquedos e ideias <span class="layers">criativas.</span></h1>
+        <p class="lead">Peças impressas em 3D aqui no laboratório, camada por camada. Escolha a sua, mande o pedido pelo WhatsApp e a impressora começa a trabalhar.</p>
+        <div class="actions">
+          <a class="btn cta" href="#pecas">Ver as peças</a>
+          <a class="btn ghost" href="#como">Como comprar</a>
+        </div>
+        <div class="facts">
+          <span>Feito sob encomenda</span>
+          <span>PLA resistente e leve</span>
+          <span>Envio para todo o Brasil</span>
+        </div>
+      </div>
+      <figure><img src="img/logo.png" alt="Logo Tutu Lab: menino piscando com foguete, planeta e estrelas"></figure>
+    </div>
+  </section>
+
+  <section class="steps" id="como" aria-labelledby="comoT">
+    <div class="wrap">
+      <h2 id="comoT" style="font-size:1.5rem;margin-bottom:12px">Como comprar</h2>
+      <ol>
+        <li><b>Escolha</b><small>Coloque as peças no carrinho e diga a cor que prefere.</small></li>
+        <li><b>Peça pelo WhatsApp</b><small>O pedido chega pronto na conversa. Lá combinamos o frete e você paga por Pix ou cartão.</small></li>
+        <li><b>A impressora trabalha</b><small>Cada peça é impressa depois do pagamento, em 2 a 5 dias.</small></li>
+        <li><b>Chega na sua casa</b><small>Enviamos pelos Correios ou combinamos a retirada.</small></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="shop" id="pecas" aria-labelledby="pecasT">
+    <div class="wrap">
+      <div class="shop-head">
+        <h2 id="pecasT">Peças do laboratório</h2>
+        <div class="chips" id="chips" role="group" aria-label="Filtrar por categoria"></div>
+      </div>
+      <p class="notice" id="exNotice" hidden>As peças marcadas como <b>exemplo</b> só mostram como a vitrine fica. Troque pelas peças de verdade antes de divulgar a loja.</p>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b>Tutu Lab</b>Brinquedos e ideias criativas.<br>Pequenos brinquedos. Grandes aventuras.</div>
+    <div><b>Fale com a gente</b><span id="contato"></span></div>
+    <div><b>Segurança</b>Peças pequenas podem ser engolidas.<br>Brinque sempre com um adulto por perto.</div>
+  </div>
+</footer>
+
+<dialog id="pdDlg" aria-labelledby="pdName"></dialog>
+<dialog id="cartDlg" class="drawer" aria-labelledby="cartT"></dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+/* =====================================================================
+   CONFIGURAÇÃO DA LOJA — edite aqui
+   whatsapp: só números, com 55 + DDD. Ex.: "5511987654321"
+   ===================================================================== */
+const LOJA = {
+  whatsapp: "",
+  instagram: "tutulab.br",
+  prazo: "2 a 5 dias para imprimir"
+};
+
+/* =====================================================================
+   PEÇAS — cada { ... } é um produto.
+   fotos: caminhos dentro da pasta img/ (ex.: "img/pecas/dragao-1.jpg").
+          Sem foto, aparece uma placa colorida com a inicial.
+   preco: número (ex.: 49.90) ou null para aparecer "Sob consulta".
+   Opcionais: resumo, tamanho, gramas, horas, camada, idade, exemplo: true.
+   ===================================================================== */
+const OUTRA = "Outra cor (escreva na observação)";
+const PECAS = [
+  { id: "luminaria-dino", nome: "Luminária Dino", categoria: "Luminárias", preco: 129.90,
+    resumo: "Luminária com potinho na barriga",
+    descricao: "Dinossauro de pescoço comprido que acende pela cabeça. A barriga é um potinho para guardar lápis, chaves ou miudezas. Fica ótimo na mesa de estudo ou no criado-mudo.",
+    idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
+    cores: ["Vermelho com espinhos amarelos (como na foto)", OUTRA], cor: "#E2352B",
+    fotos: ["img/pecas/luminaria-dino-1.jpg", "img/pecas/luminaria-dino-2.jpg", "img/pecas/luminaria-dino-3.jpg", "img/pecas/luminaria-dino-4.jpg", "img/pecas/luminaria-dino-5.jpg"] },
+  { id: "luminaria-ovo-dino", nome: "Luminária Ovo de Dinossauro", categoria: "Luminárias", preco: 109.90,
+    resumo: "Filhote saindo do ovo, com luz",
+    descricao: "Um filhote de dinossauro quebrando a casca, sobre uma base de pedras. Com a luz acesa o ovo brilha por dentro, perfeito como luz de cabeceira.",
+    idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
+    cores: ["Ovo branco com base preta (como na foto)", OUTRA], cor: "#3B3B3B",
+    fotos: ["img/pecas/luminaria-ovo-dino-1.jpg", "img/pecas/luminaria-ovo-dino-2.jpg", "img/pecas/luminaria-ovo-dino-3.jpg"] },
+  { id: "luminaria-mao-heroi", nome: "Luminária Mão de Herói", categoria: "Luminárias", preco: 149.90,
+    resumo: "Mão de armadura com luz na palma",
+    descricao: "Mão de armadura com os dedos abertos e uma luz redonda e forte na palma. Peça de destaque para o quarto de quem gosta de super-heróis.",
+    idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
+    cores: ["Vermelho (como na foto)", OUTRA], cor: "#C62828",
+    fotos: ["img/pecas/luminaria-mao-heroi-1.jpg", "img/pecas/luminaria-mao-heroi-2.jpg", "img/pecas/luminaria-mao-heroi-3.jpg"] },
+  { id: "luminaria-nuvem-aviao", nome: "Luminária Nuvem com Avião", categoria: "Luminárias", preco: 149.90,
+    resumo: "Avião de caça voando sobre a nuvem",
+    descricao: "Um avião de caça antigo voando sobre uma nuvem que acende. A luz é suave e quente, boa para deixar ligada à noite.",
+    idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
+    cores: ["Como na foto", OUTRA], cor: "#6AADE0",
+    fotos: ["img/pecas/luminaria-nuvem-aviao-1.jpg"] },
+  { id: "dragao-noturno", nome: "Dragão Noturno Articulado", categoria: "Articulados", preco: 109.90,
+    resumo: "Dragão preto com asas e corpo que se mexem",
+    descricao: "Dragão preto de olhos amarelos, com asas grandes e corpo articulado: dá para mexer o pescoço, as pernas e a cauda. Sai da impressora já montado.",
+    idade: "Contém partes pequenas e pontas. Não indicado para menores de 3 anos.",
+    cores: ["Preto (como na foto)", OUTRA], cor: "#24262B",
+    fotos: ["img/pecas/dragao-noturno-1.jpg", "img/pecas/dragao-noturno-2.jpg", "img/pecas/dragao-noturno-3.jpg", "img/pecas/dragao-noturno-4.jpg"] },
+  { id: "cofre-cabecao", nome: "Cofrinho Cabeção", categoria: "Cofrinhos", preco: 189.90,
+    resumo: "Cofre de cabeça sorridente",
+    descricao: "Cofrinho em forma de cabeça de bonequinho sorridente. A moeda entra por cima e a tampa de baixo abre para tirar o dinheiro.",
+    cores: ["Amarelo (como na foto)", OUTRA], cor: "#F2B705",
+    fotos: ["img/pecas/cofre-cabecao-1.jpg", "img/pecas/cofre-cabecao-2.jpg", "img/pecas/cofre-cabecao-3.jpg", "img/pecas/cofre-cabecao-4.jpg", "img/pecas/cofre-cabecao-5.jpg"] }
+];
+
+/* ===================================================================== */
+const $ = (s, el = document) => el.querySelector(s);
+const brl = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const horas = h => { const t = Math.round(h * 60); return t < 60 ? `${t} min` : `${Math.floor(t / 60)}h${t % 60 ? String(t % 60).padStart(2, "0") : ""}`; };
+const byId = id => PECAS.find(p => p.id === id);
+const valor = p => p.preco ? brl(p.preco) : "Sob consulta";
+const consulta = () => cart.some(l => !byId(l.id).preco);
+
+function pic(p, i = 0) {
+  const f = p.fotos[i];
+  return `<div class="ph" style="--c:${esc(p.cor || "#2855D9")}">${f ? `<img src="${esc(f)}" alt="${esc(p.nome)}" loading="lazy">` : `<span aria-hidden="true">${esc(p.nome[0])}</span>`}</div>`;
+}
+
+/* Carrinho (fica salvo no navegador de quem compra) */
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("tutulab-cart") || "[]").filter(l => byId(l.id)); } catch { cart = []; }
+const save = () => { try { localStorage.setItem("tutulab-cart", JSON.stringify(cart)); } catch {} };
+let form = { nome: "", cep: "", obs: "", entrega: "Correios" };
+try { Object.assign(form, JSON.parse(localStorage.getItem("tutulab-form") || "{}")); } catch {}
+const saveForm = () => { try { localStorage.setItem("tutulab-form", JSON.stringify(form)); } catch {} };
+
+function add(id, cor, qtd = 1) {
+  const p = byId(id); cor = cor || p.cores[0];
+  const l = cart.find(l => l.id === id && l.cor === cor);
+  l ? l.qtd += qtd : cart.push({ id, cor, qtd });
+  save(); updateCount(); toast(`${p.nome} no carrinho`);
+}
+function updateCount() { $("#cartCount").textContent = cart.reduce((s, l) => s + l.qtd, 0); }
+let tt; function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(tt); tt = setTimeout(() => el.hidden = true, 1800); }
+
+/* Vitrine */
+let filtro = "Todas";
+function renderChips() {
+  const cats = ["Todas", ...new Set(PECAS.map(p => p.categoria))];
+  $("#chips").innerHTML = cats.map(c => `<button class="chip" type="button" aria-pressed="${c === filtro}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+}
+function renderGrid() {
+  const list = PECAS.filter(p => filtro === "Todas" || p.categoria === filtro);
+  $("#grid").innerHTML = list.map(p => `
+    <article class="card">
+      <button class="pic" type="button" data-open="${p.id}" aria-label="Ver ${esc(p.nome)}">${pic(p)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}</button>
+      <div class="body">
+        <h3>${esc(p.nome)}</h3>
+        <div class="spec">${esc(p.resumo || p.categoria)}</div>
+        <div class="row"><span class="price">${valor(p)}</span><button class="add" type="button" data-add="${p.id}">Adicionar</button></div>
+      </div>
+    </article>`).join("");
+  $("#exNotice").hidden = !PECAS.some(p => p.exemplo);
+}
+$("#chips").addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (!b) return; filtro = b.dataset.cat; renderChips(); renderGrid(); });
+$("#grid").addEventListener("click", e => {
+  const a = e.target.closest("[data-add]"); if (a) return add(a.dataset.add);
+  const o = e.target.closest("[data-open]"); if (o) openProduct(o.dataset.open);
+});
+
+/* Ficha da peça */
+function openProduct(id) {
+  const p = byId(id), d = $("#pdDlg"); let foto = 0, qtd = 1;
+  const draw = () => {
+    d.innerHTML = `
+      <button class="close" type="button" data-x aria-label="Fechar">×</button>
+      <div class="pd">
+        <div>
+          <div class="gal">${pic(p, foto)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}</div>
+          ${p.fotos.length > 1 ? `<div class="thumbs">${p.fotos.map((f, i) => `<button type="button" data-foto="${i}" aria-current="${i === foto}" aria-label="Foto ${i + 1}"><img src="${esc(f)}" alt=""></button>`).join("")}</div>` : ""}
+        </div>
+        <div class="info">
+          <h3 id="pdName">${esc(p.nome)}</h3>
+          <span class="price">${valor(p)}</span>
+          <p>${esc(p.descricao)}</p>
+          <dl class="specs">
+            <dt>Material</dt><dd>PLA impresso em 3D</dd>
+            ${p.tamanho ? `<dt>Tamanho</dt><dd>${esc(p.tamanho)}</dd>` : ""}
+            ${p.gramas ? `<dt>Peso</dt><dd>${p.gramas} g</dd>` : ""}
+            ${p.horas ? `<dt>Impressão</dt><dd>${horas(p.horas)}${p.camada ? ` · camada de ${esc(p.camada)}` : ""}</dd>` : ""}
+          </dl>
+          ${p.idade ? `<div class="age">${esc(p.idade)}</div>` : ""}
+          <label class="f" for="pdCor">Cor
+            <select id="pdCor">${p.cores.map(c => `<option>${esc(c)}</option>`).join("")}</select>
+          </label>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <div class="qty"><button type="button" data-q="-1" aria-label="Menos">−</button><output id="pdQtd">${qtd}</output><button type="button" data-q="1" aria-label="Mais">+</button></div>
+            <button class="btn cta" type="button" data-addpd style="flex:1">Adicionar ao carrinho</button>
+          </div>
+        </div>
+      </div>`;
+  };
+  draw();
+  d.onclick = e => {
+    if (e.target === d || e.target.closest("[data-x]")) return d.close();
+    const f = e.target.closest("[data-foto]"); if (f) { const cor = $("#pdCor").value; foto = +f.dataset.foto; draw(); $("#pdCor").value = cor; return; }
+    const q = e.target.closest("[data-q]"); if (q) { qtd = Math.max(1, qtd + +q.dataset.q); $("#pdQtd").textContent = qtd; return; }
+    if (e.target.closest("[data-addpd]")) { add(p.id, $("#pdCor").value, qtd); d.close(); }
+  };
+  d.showModal();
+}
+
+/* Carrinho e pedido */
+function pedidoTexto() {
+  const tot = cart.reduce((s, l) => s + (byId(l.id).preco || 0) * l.qtd, 0);
+  return [
+    "Olá, Tutu Lab! Quero fazer este pedido:", "",
+    ...cart.map(l => { const p = byId(l.id); return `• ${l.qtd}x ${p.nome} (${l.cor}) — ${p.preco ? brl(p.preco * l.qtd) : "preço a combinar"}`; }),
+    "", consulta() ? "Preço das peças e frete: a combinar" : `Total das peças: ${brl(tot)} (frete a combinar)`,
+    `Nome: ${form.nome || "-"}`, `Entrega: ${form.entrega}${form.entrega === "Correios" ? ` · CEP ${form.cep || "-"}` : ""}`,
+    form.obs ? `Observação: ${form.obs}` : ""
+  ].filter((x, i, a) => x !== "" || a[i - 1] !== "").join("\n").trim();
+}
+function renderCart() {
+  const d = $("#cartDlg");
+  const tot = cart.reduce((s, l) => s + (byId(l.id).preco || 0) * l.qtd, 0);
+  const wa = LOJA.whatsapp ? `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(pedidoTexto())}` : "";
+  d.innerHTML = `<div class="in">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2 id="cartT">Seu carrinho</h2><button class="close" style="position:static" type="button" data-x aria-label="Fechar">×</button></div>
+    <div class="lines">${cart.length ? cart.map((l, i) => { const p = byId(l.id); return `
+      <div class="line"><div class="mini">${pic(p)}</div>
+        <div style="min-width:0"><b>${l.qtd}x ${esc(p.nome)}</b><small>${esc(l.cor)}</small><button class="rm" type="button" data-rm="${i}">remover</button></div>
+        <span class="price">${p.preco ? brl(p.preco * l.qtd) : "a combinar"}</span></div>`; }).join("") : `<p class="empty">O carrinho está vazio.<br>Escolha uma peça na vitrine.</p>`}</div>
+    ${cart.length ? `
+    <div class="total"><span>Total das peças<small>Frete e pagamento (Pix ou cartão) no WhatsApp</small></span><span class="price">${consulta() ? (tot ? brl(tot) + " + consulta" : "Sob consulta") : brl(tot)}</span></div>
+    <form class="checkout" id="ck">
+      <label class="f" for="ckNome">Seu nome<input id="ckNome" name="nome" autocomplete="name" value="${esc(form.nome)}" required></label>
+      <div class="two">
+        <label class="f" for="ckEnt">Entrega<select id="ckEnt" name="entrega">${["Correios", "Retirada"].map(o => `<option ${o === form.entrega ? "selected" : ""}>${o}</option>`).join("")}</select></label>
+        <label class="f" for="ckCep">CEP<input id="ckCep" name="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" value="${esc(form.cep)}"></label>
+      </div>
+      <label class="f" for="ckObs">Observação<textarea id="ckObs" name="obs" rows="2" placeholder="Nome do chaveiro, cor preferida, presente…">${esc(form.obs)}</textarea></label>
+      ${wa ? `<a class="btn cta" id="ckSend" href="${wa}" target="_blank" rel="noopener">Enviar pedido pelo WhatsApp</a>`
+           : `<p class="notice" style="margin:0">O número de WhatsApp da loja ainda não foi configurado. Copie o pedido abaixo e mande pelo direct do Instagram <b>@${esc(LOJA.instagram)}</b>.</p>`}
+      <button class="btn ghost" type="button" id="ckCopy">Copiar pedido</button>
+      <div class="msgbox" id="ckMsg">${esc(pedidoTexto())}</div>
+    </form>` : ""}
+  </div>`;
+}
+function refreshPedido() {
+  const msg = $("#ckMsg"); if (msg) msg.textContent = pedidoTexto();
+  const a = $("#ckSend"); if (a) a.href = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(pedidoTexto())}`;
+}
+$("#openCart").addEventListener("click", () => { renderCart(); $("#cartDlg").showModal(); });
+$("#cartDlg").addEventListener("click", e => {
+  const d = $("#cartDlg");
+  if (e.target === d || e.target.closest("[data-x]")) return d.close();
+  const r = e.target.closest("[data-rm]"); if (r) { cart.splice(+r.dataset.rm, 1); save(); updateCount(); renderCart(); return; }
+  if (e.target.closest("#ckCopy")) {
+    const t = pedidoTexto();
+    const fallback = () => { const s = getSelection(), rg = document.createRange(); rg.selectNodeContents($("#ckMsg")); s.removeAllRanges(); s.addRange(rg); toast("Pedido selecionado: copie com Ctrl+C"); };
+    try { navigator.clipboard.writeText(t).then(() => toast("Pedido copiado"), fallback); } catch { fallback(); }
+  }
+});
+$("#cartDlg").addEventListener("input", e => {
+  if (!e.target.name) return;
+  form[e.target.name] = e.target.value; saveForm(); refreshPedido();
+});
+$("#cartDlg").addEventListener("submit", e => e.preventDefault());
+
+$("#contato").innerHTML = [
+  LOJA.whatsapp ? `WhatsApp: <span style="user-select:all">+${esc(LOJA.whatsapp)}</span>` : "",
+  `Instagram: <a href="https://instagram.com/${esc(LOJA.instagram)}" target="_blank" rel="noopener">@${esc(LOJA.instagram)}</a>`,
+  `Prazo: ${esc(LOJA.prazo)}`
+].filter(Boolean).join("<br>");
+
+renderChips(); renderGrid(); updateCount();
+</script>
