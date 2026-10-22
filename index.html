@@ -139,6 +139,11 @@ header.top .wrap { display: flex; align-items: center; gap: 12px; padding-block:
     var(--c, var(--azul)); }
 .ph span { font: 700 clamp(3.5rem, 9vw, 5.5rem)/1 var(--f-display); color: rgba(255,255,255,.92); text-shadow: 0 4px 0 rgba(0,0,0,.12); }
 .ph img { width: 100%; height: 100%; object-fit: cover; }
+.ph video { width: 100%; height: 100%; object-fit: contain; background: #0E1527; }
+.tag-vid { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px; background: rgba(14,21,39,.82); color: #FFF8E8; font-size: .75rem; font-weight: 800; padding: 5px 9px 5px 8px; border-radius: 999px; }
+.tag-vid::before, .pd .thumbs .play::before { content: ""; border-style: solid; border-width: 5px 0 5px 8px; border-color: transparent transparent transparent var(--amarelo); }
+.pd .thumbs button { position: relative; }
+.pd .thumbs .play { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(14,21,39,.35); }
 
 /* Diálogo de produto e gaveta */
 dialog { border: 0; padding: 0; background: var(--surface); color: var(--fg); border-radius: 22px; max-width: min(860px, calc(100vw - 24px)); width: 100%; box-shadow: 0 30px 80px -20px rgba(0,0,0,.5); }
@@ -281,7 +286,7 @@ const LOJA = {
    fotos: caminhos dentro da pasta img/ (ex.: "img/pecas/dragao-1.jpg").
           Sem foto, aparece uma placa colorida com a inicial.
    preco: número (ex.: 49.90) ou null para aparecer "Sob consulta".
-   Opcionais: resumo, tamanho, gramas, horas, camada, idade, exemplo: true.
+   Opcionais: resumo, tamanho, gramas, horas, camada, idade, video (img/videos/x.mp4 + x.jpg de capa), exemplo: true.
    ===================================================================== */
 const OUTRA = "Outra cor (escreva na observação)";
 const PECAS = [
@@ -290,24 +295,28 @@ const PECAS = [
     descricao: "Dinossauro de pescoço comprido que acende pela cabeça. A barriga é um potinho para guardar lápis, chaves ou miudezas. Fica ótimo na mesa de estudo ou no criado-mudo.",
     idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
     cores: ["Vermelho com espinhos amarelos (como na foto)", OUTRA], cor: "#E2352B",
+    video: "img/videos/luminaria-dino.mp4",
     fotos: ["img/pecas/luminaria-dino-capa.jpg", "img/pecas/luminaria-dino-1.jpg", "img/pecas/luminaria-dino-2.jpg", "img/pecas/luminaria-dino-3.jpg", "img/pecas/luminaria-dino-4.jpg", "img/pecas/luminaria-dino-5.jpg"] },
   { id: "luminaria-ovo-dino", nome: "Luminária Ovo de Dinossauro", categoria: "Luminárias", preco: 109.90,
     resumo: "Filhote saindo do ovo, com luz",
     descricao: "Um filhote de dinossauro quebrando a casca, sobre uma base de pedras. Com a luz acesa o ovo brilha por dentro, perfeito como luz de cabeceira.",
     idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
     cores: ["Ovo branco com base preta (como na foto)", OUTRA], cor: "#3B3B3B",
+    video: "img/videos/luminaria-ovo-dino.mp4",
     fotos: ["img/pecas/luminaria-ovo-dino-capa.jpg", "img/pecas/luminaria-ovo-dino-1.jpg", "img/pecas/luminaria-ovo-dino-2.jpg", "img/pecas/luminaria-ovo-dino-3.jpg"] },
   { id: "luminaria-mao-heroi", nome: "Luminária Mão de Herói", categoria: "Luminárias", preco: 149.90,
     resumo: "Mão de armadura com luz na palma",
     descricao: "Mão de armadura com os dedos abertos e uma luz redonda e forte na palma. Peça de destaque para o quarto de quem gosta de super-heróis.",
     idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
     cores: ["Vermelho (como na foto)", OUTRA], cor: "#C62828",
+    video: "img/videos/luminaria-mao-heroi.mp4",
     fotos: ["img/pecas/luminaria-mao-heroi-capa.jpg", "img/pecas/luminaria-mao-heroi-1.jpg", "img/pecas/luminaria-mao-heroi-2.jpg", "img/pecas/luminaria-mao-heroi-3.jpg"] },
   { id: "luminaria-nuvem-aviao", nome: "Luminária Nuvem com Avião", categoria: "Luminárias", preco: 149.90,
     resumo: "Avião de caça voando sobre a nuvem",
     descricao: "Um avião de caça antigo voando sobre uma nuvem que acende. A luz é suave e quente, boa para deixar ligada à noite.",
     idade: "Produto elétrico. Uso por crianças com supervisão de um adulto.",
     cores: ["Como na foto", OUTRA], cor: "#6AADE0",
+    video: "img/videos/luminaria-nuvem-aviao.mp4",
     fotos: ["img/pecas/luminaria-nuvem-aviao-capa.jpg", "img/pecas/luminaria-nuvem-aviao-1.jpg"] },
   { id: "dragao-noturno", nome: "Dragão Noturno Articulado", categoria: "Articulados", preco: 109.90,
     resumo: "Dragão preto com asas e corpo que se mexem",
@@ -333,6 +342,7 @@ const consulta = () => cart.some(l => !byId(l.id).preco);
 
 function pic(p, i = 0) {
   const f = p.fotos[i];
+  if (i === -1) return `<div class="ph"><video src="${esc(p.video)}" poster="${esc(p.video.replace(/\.mp4$/, ".jpg"))}" autoplay muted loop playsinline controls aria-label="Vídeo: ${esc(p.nome)} acesa"></video></div>`;
   return `<div class="ph" style="--c:${esc(p.cor || "#2855D9")}">${f ? `<img src="${esc(f)}" alt="${esc(p.nome)}" loading="lazy">` : `<span aria-hidden="true">${esc(p.nome[0])}</span>`}</div>`;
 }
 
@@ -363,7 +373,7 @@ function renderGrid() {
   const list = PECAS.filter(p => filtro === "Todas" || p.categoria === filtro);
   $("#grid").innerHTML = list.map(p => `
     <article class="card">
-      <button class="pic" type="button" data-open="${p.id}" aria-label="Ver ${esc(p.nome)}">${pic(p)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}</button>
+      <button class="pic" type="button" data-open="${p.id}" aria-label="Ver ${esc(p.nome)}">${pic(p)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}${p.video ? '<span class="tag-vid">vídeo acesa</span>' : ""}</button>
       <div class="body">
         <h3>${esc(p.nome)}</h3>
         <div class="spec">${esc(p.resumo || p.categoria)}</div>
@@ -387,7 +397,9 @@ function openProduct(id) {
       <div class="pd">
         <div>
           <div class="gal">${pic(p, foto)}${p.exemplo ? '<span class="tag-ex">exemplo</span>' : ""}</div>
-          ${p.fotos.length > 1 ? `<div class="thumbs">${p.fotos.map((f, i) => `<button type="button" data-foto="${i}" aria-current="${i === foto}" aria-label="Foto ${i + 1}"><img src="${esc(f)}" alt=""></button>`).join("")}</div>` : ""}
+          ${p.fotos.length > 1 || p.video ? `<div class="thumbs">${[0, ...(p.video ? [-1] : []), ...p.fotos.map((_, i) => i).slice(1)].map(i => i === -1
+            ? `<button type="button" data-foto="-1" aria-current="${foto === -1}" aria-label="Vídeo da luminária acesa"><img src="${esc(p.video.replace(/\.mp4$/, ".jpg"))}" alt=""><span class="play"></span></button>`
+            : `<button type="button" data-foto="${i}" aria-current="${i === foto}" aria-label="Foto ${i + 1}"><img src="${esc(p.fotos[i])}" alt=""></button>`).join("")}</div>` : ""}
         </div>
         <div class="info">
           <h3 id="pdName">${esc(p.nome)}</h3>
